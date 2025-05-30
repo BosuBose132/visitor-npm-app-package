@@ -1,6 +1,6 @@
 {
   "name": "visitor-npm-app",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,10 +12,10 @@
 
   "repository": {
   "type": "git",
-  "url": "git+https://github.com/BosuBose132/visitor-npm-app.git"
+  "url": "git+https://github.com/BosuBose132/visitor-npm-app-package.git"
 },
 "bugs": {
-  "url": "https://github.com/BosuBose132/visitor-npm-app/issues"
+  "url": "https://github.com/BosuBose132/visitor-npm-app-package/issues"
 },
-"homepage": "https://github.com/BosuBose132/visitor-npm-app#readme"
+"homepage": "https://github.com/BosuBose132/visitor-npm-app-package#readme"
 }
