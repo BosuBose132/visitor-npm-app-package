@@ -1,6 +1,6 @@
 {
   "name": "visitor-npm-app",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -8,5 +8,14 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+
+  "repository": {
+  "type": "git",
+  "url": "git+https://github.com/BosuBose132/visitor-npm-app.git"
+},
+"bugs": {
+  "url": "https://github.com/BosuBose132/visitor-npm-app/issues"
+},
+"homepage": "https://github.com/BosuBose132/visitor-npm-app#readme"
 }
