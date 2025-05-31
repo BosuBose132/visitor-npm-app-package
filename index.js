@@ -1,32 +1,34 @@
 function normalize(text) {
-  return text.trim().toLowerCase();
+  return text ? text.trim().toLowerCase() : '';
 }
 
-function validateVisitor(data) {
-  if (!data.name || !data.company) {
-    throw new Error('Missing required visitor fields.');
-  }
-}
-
-function isDuplicateVisitor(data, db) {
+async function isDuplicateVisitor(data, db) {
   const name = normalize(data.name);
   const company = normalize(data.company);
 
-  return db.findOne({
+  console.log('[isDuplicateVisitor] Checking:', name, company);
+
+  const match = await db.findOneAsync({
     name: { $regex: new RegExp(`^${name}$`, 'i') },
     company: { $regex: new RegExp(`^${company}$`, 'i') }
   });
+
+  console.log('[isDuplicateVisitor] Match Found:', match);
+  return match;
 }
 
-function checkAndCreateVisitor(data, db) {
-  validateVisitor(data);
+async function checkAndCreateVisitor(data, db) {
+  console.log('[checkAndCreateVisitor] Received:', data);
 
-  const existing = isDuplicateVisitor(data, db);
+  const existing = await isDuplicateVisitor(data, db);
   if (existing) {
+    console.log('[checkAndCreateVisitor] Duplicate found');
     return { status: 'duplicate', visitor: existing };
   }
 
-  const _id = db.insert({ ...data, createdAt: new Date() });
+  const _id = await db.insertAsync({ ...data, createdAt: new Date() });
+  console.log('[checkAndCreateVisitor] Inserted ID:', _id);
+
   return { status: 'created', _id };
 }
 
