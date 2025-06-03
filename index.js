@@ -1,3 +1,5 @@
+require('./connect');
+const mongoose = require('mongoose');
 const Visitor = require('./visitorSchema'); // Make sure the path is correct
 
 function normalize(text) {
