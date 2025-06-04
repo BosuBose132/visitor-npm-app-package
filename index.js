@@ -1,12 +1,22 @@
+const fs = require('fs');
+const path = require('path');
+const Ajv = require('ajv');
 const { visitorSchema } = require('./visitorSchema');
+
+const ajv = new Ajv();
+const schemaPath = path.join(__dirname, 'visitorSchema.json');
+const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf-8'));
+const validateSchema = ajv.compile(schema);
 
 function normalize(text) {
   return text ? text.trim().toLowerCase() : '';
 }
 
 function validateVisitor(data) {
-  if (!data.name || !data.company) {
-    throw new Error('Missing required visitor fields.');
+  const valid = validateSchema(data);
+  if (!valid) {
+    const errors = validateSchema.errors.map(e => `${e.instancePath} ${e.message}`).join(', ');
+    throw new Error(`Validation failed: ${errors}`);
   }
 }
 
