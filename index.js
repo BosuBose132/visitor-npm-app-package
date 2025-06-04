@@ -1,9 +1,6 @@
-require('./connect');
-const mongoose = require('mongoose');
-const Visitor = require('./visitorSchema'); // Make sure the path is correct
+const { visitorSchema } = require('./visitorSchema');
 
 function normalize(text) {
-  return text ? text.trim().toLowerCase() : '';
   return text ? text.trim().toLowerCase() : '';
 }
 
@@ -13,29 +10,44 @@ function validateVisitor(data) {
   }
 }
 
-async function checkAndCreateVisitor(data) {
-  validateVisitor(data);
+function isMongooseModel(db) {
+  return typeof db.findOne === 'function' && typeof db.create === 'function';
+}
 
+async function isDuplicateVisitor(data, db) {
   const name = normalize(data.name);
   const company = normalize(data.company);
 
-  const existing = await Visitor.findOne({
+  const query = {
     name: { $regex: new RegExp(`^${name}$`, 'i') },
-    company: { $regex: new RegExp(`^${company}$`, 'i') },
-  });
+    company: { $regex: new RegExp(`^${company}$`, 'i') }
+  };
 
+  return isMongooseModel(db)
+    ? await db.findOne(query)
+    : await db.findOneAsync(query);
+}
+
+async function checkAndCreateVisitor(data, db) {
+  validateVisitor(data);
+
+  const existing = await isDuplicateVisitor(data, db);
   if (existing) {
-    console.log('[checkAndCreateVisitor] Duplicate found');
     return { status: 'duplicate', visitor: existing };
   }
 
-  const newVisitor = new Visitor({
+  const newVisitor = {
     ...data,
     createdAt: new Date()
-  });
+  };
 
-  await newVisitor.save();
-  return { status: 'created', _id: newVisitor._id };
+  if (isMongooseModel(db)) {
+    const created = await db.create(newVisitor);
+    return { status: 'created', _id: created._id };
+  } else {
+    const _id = await db.insertAsync(newVisitor);
+    return { status: 'created', _id };
+  }
 }
 
 module.exports = {
