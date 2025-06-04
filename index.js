@@ -3,6 +3,8 @@ const path = require('path');
 const Ajv = require('ajv');
 const { visitorSchema } = require('./visitorSchema');
 
+
+
 const ajv = new Ajv();
 const schemaPath = path.join(__dirname, 'visitorSchema.json');
 const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf-8'));

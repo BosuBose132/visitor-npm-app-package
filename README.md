@@ -1,33 +1,34 @@
 
 # visitor-npm-app
 
-A minimal and developer-friendly Node.js package for managing visitor entries in a MongoDB-based system. Designed to integrate seamlessly with **Meteor.js**, **Express**, or any **Node.js** backend. Now enhanced with **Mongoose schema support** for robust validation and structure.
+A lightweight, developer-friendly Node.js package to streamline visitor check-ins with powerful validation, duplicate prevention, and MongoDB/Mongoose support. Ideal for integration with **Meteor.js**, **Express**, or any **Node.js** backend.
 
 ---
 
 ## ✨ Features
 
-- ✅ Validates required visitor fields (`name`, `company`)
-- 🧠 Normalizes data (trims and lowercases) to avoid false duplicates
-- 🔁 Checks for duplicates using case-insensitive matching
-- 🗃️ Inserts new visitors with a `createdAt` timestamp
-- 📋 Returns structured status response (`created` or `duplicate`)
-- ⚙️ Mongoose schema support for easy integration with structured MongoDB models
-- 📦 Lightweight, modular, and reusable in any JS project
+- ✅ Validates required fields (`name`, `company`) using **AJV** and **JSON Schema**
+- 🧠 Normalizes input (trims + lowercases) to avoid false duplicates
+- 🔁 Prevents duplicates via case-insensitive matching
+- 🗃️ Adds `createdAt` timestamp for new visitors
+- 🔗 Works with both **raw MongoDB collections** and **Mongoose models**
+- ⚙️ Supports structured validation with `visitorSchema.json`
+- 📦 Modular and easy to use in any JavaScript project
 
 ---
 
 ## 🚀 Installation
 
-If published to npm:
+Install from npm:
 
 ```bash
 npm install visitor-npm-app
 
+
 ## 🚀 Usage
 
 const { checkAndCreateVisitor } = require('visitor-npm-app');
-const Visitors = require('./models/Visitors'); // A Mongoose model or raw Mongo collection
+const Visitors = require('./models/Visitors'); // Mongoose model or raw collection
 
 const data = {
   name: 'John Doe',
@@ -39,20 +40,24 @@ const data = {
 const result = await checkAndCreateVisitor(data, Visitors);
 console.log(result);
 
-```
 
 ## 🧾 Output
 // If visitor already exists
 {
-  status: 'duplicate',
-  visitor: { name: 'John Doe', company: 'OpenAI', ... }
+  "status": "duplicate",
+  "visitor": {
+    "name": "John Doe",
+    "company": "OpenAI",
+    ...
+  }
 }
 
 // If new visitor is created
 {
-  status: 'created',
-  _id: 'uniqueId123'
+  "status": "created",
+  "_id": "uniqueId123"
 }
+
 
 ## mongoose Schema Integration
 
@@ -68,6 +73,7 @@ const visitorSchema = new mongoose.Schema({
 
 module.exports = mongoose.model('Visitor', visitorSchema);
 
+
 ```
 
 ## 🧪 Example Use in Meteor
@@ -75,10 +81,26 @@ module.exports = mongoose.model('Visitor', visitorSchema);
 Inside a Meteor method:
 
 Meteor.methods({
-  async 'visitor.create'(data) {
-    return await checkAndCreateVisitor(data, Visitors); // Mongo/Mongoose compatible
+  async 'visitors.checkIn'(data) {
+    return await checkAndCreateVisitor(data, Visitors); // Supports MongoDB or Mongoose
   }
 });
+
+## JSON Schema Validation
+
+{
+  "type": "object",
+  "required": ["name", "company"],
+  "properties": {
+    "name": { "type": "string", "minLength": 1 },
+    "company": { "type": "string", "minLength": 1 },
+    "email": { "type": "string", "format": "email" },
+    "purpose": { "type": "string" },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}
+
 
 ```
 
