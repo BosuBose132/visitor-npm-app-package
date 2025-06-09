@@ -1,8 +1,11 @@
+console.log('🟢 index.js is loaded!');
+
 const fs = require('fs');
 const path = require('path');
 const Ajv = require('ajv');
 const { visitorSchema } = require('./visitorSchema');
 const validatePatient = require('./validateFhirPatient');
+const transformToFhir = require('./transformToFhir');
 
 
 
@@ -43,9 +46,24 @@ async function isDuplicateVisitor(data, db) {
 }
 
 async function checkAndCreateVisitor(data, db) {
-  validateVisitor(data);         // Your custom validation
-  validateFhirPatient(data);         // FHIR JSON validation (new)
+  validateVisitor(data); // JSON Schema validation
+console.log('>>> Reached FHIR transformation step');
 
+  // Transform visitor data into FHIR format
+  const fhirData = transformToFhir(data);
+
+  // 🔍 Debug: Print transformed FHIR data
+  console.log('Transformed FHIR Data:', JSON.stringify(fhirData, null, 2));
+
+  // Validate FHIR structure
+  try {
+    validatePatient(fhirData);
+    console.log('✅ FHIR Patient validation passed.');
+  } catch (error) {
+    console.error('❌ FHIR Patient validation failed:', error.message);
+  }
+
+  // Duplicate check logic
   const existing = await isDuplicateVisitor(data, db);
   if (existing) {
     return { status: 'duplicate', visitor: existing };
@@ -64,6 +82,7 @@ async function checkAndCreateVisitor(data, db) {
     return { status: 'created', _id };
   }
 }
+
 
 
 
