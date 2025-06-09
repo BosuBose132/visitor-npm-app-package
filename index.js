@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const Ajv = require('ajv');
 const { visitorSchema } = require('./visitorSchema');
+const validatePatient = require('./validateFhirPatient');
+
 
 
 
@@ -41,7 +43,8 @@ async function isDuplicateVisitor(data, db) {
 }
 
 async function checkAndCreateVisitor(data, db) {
-  validateVisitor(data);
+  validateVisitor(data);         // Your custom validation
+  validateFhirPatient(data);         // FHIR JSON validation (new)
 
   const existing = await isDuplicateVisitor(data, db);
   if (existing) {
@@ -61,6 +64,8 @@ async function checkAndCreateVisitor(data, db) {
     return { status: 'created', _id };
   }
 }
+
+
 
 module.exports = {
   checkAndCreateVisitor
