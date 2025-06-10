@@ -3,6 +3,7 @@ console.log('🟢 index.js is loaded!');
 const fs = require('fs');
 const path = require('path');
 const Ajv = require('ajv');
+const addFormats = require('ajv-formats');        
 const { visitorSchema } = require('./visitorSchema');
 const validatePatient = require('./validateFhirPatient');
 const transformToFhir = require('./transformToFhir');
@@ -11,6 +12,7 @@ const transformToFhir = require('./transformToFhir');
 
 
 const ajv = new Ajv();
+addFormats(ajv)
 const schemaPath = path.join(__dirname, 'visitorSchema.json');
 const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf-8'));
 const validateSchema = ajv.compile(schema);
