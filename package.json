@@ -19,6 +19,7 @@
   "homepage": "https://github.com/BosuBose132/visitor-npm-app-package#readme",
   "dependencies": {
     "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
     "mongoose": "^8.15.1"
   }
 }
