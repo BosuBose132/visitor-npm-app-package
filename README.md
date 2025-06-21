@@ -101,8 +101,11 @@ Meteor.methods({
   "additionalProperties": false
 }
 
+Also you can check out the app that uses this package.
+https://github.com/BosuBose132/visitor-badgemate-app
 
 ```
+
 
 ## 🧑‍💻 Author
 
