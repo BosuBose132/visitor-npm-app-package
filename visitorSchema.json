@@ -4,7 +4,8 @@
     "name": { "type": "string" },
     "company": { "type": "string" },
     "email": { "type": "string", "format": "email" },
-    "purpose": { "type": "string" }
+    "purpose": { "type": "string" },
+    "address": {"type": "string" }
   },
   "required": ["name", "company"]
 }

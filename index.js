@@ -1,4 +1,4 @@
-console.log('🟢 index.js is loaded!');
+//console.log('🟢 index.js is loaded!');
 
 const fs = require('fs');
 const path = require('path');
@@ -49,20 +49,20 @@ async function isDuplicateVisitor(data, db) {
 
 async function checkAndCreateVisitor(data, db) {
   validateVisitor(data); // JSON Schema validation
-console.log('>>> Reached FHIR transformation step');
+//console.log('>>> Reached FHIR transformation step');
 
   // Transform visitor data into FHIR format
   const fhirData = transformToFhir(data);
 
   // 🔍 Debug: Print transformed FHIR data
-  console.log('Transformed FHIR Data:', JSON.stringify(fhirData, null, 2));
+ // console.log('Transformed FHIR Data:', JSON.stringify(fhirData, null, 2));
 
   // Validate FHIR structure
   try {
     validatePatient(fhirData);
-    console.log('✅ FHIR Patient validation passed.');
+    console.log('FHIR Patient validation passed.');
   } catch (error) {
-    console.error('❌ FHIR Patient validation failed:', error.message);
+    console.error('FHIR Patient validation failed:', error.message);
   }
 
   // Duplicate check logic
@@ -72,8 +72,14 @@ console.log('>>> Reached FHIR transformation step');
   }
 
   const newVisitor = {
-    ...data,
-    createdAt: new Date()
+    name: normalize(data.name),
+  company: normalize(data.company),
+  email: normalize(data.email),
+  phone: normalize(data.phone),
+  purpose: data.purpose?.trim() || null,
+  address: data.address?.trim() || null,
+  dob: data.dob?.trim() || null,
+  createdAt: new Date()
   };
 
   if (isMongooseModel(db)) {

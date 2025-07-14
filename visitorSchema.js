@@ -6,6 +6,8 @@ const visitorSchema = new mongoose.Schema({
   company: { type: String, required: true },
   email: { type: String },
   purpose: { type: String },
+  address: { type: String },
+  phone: { type: String },
   createdAt: { type: Date, default: Date.now }
 });
 
