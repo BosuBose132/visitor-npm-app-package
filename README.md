@@ -1,5 +1,5 @@
 
-# visitor-npm-app
+# visitor-npm-app https://www.npmjs.com/package/visitor-npm-app
 
 A lightweight, developer-friendly Node.js package to streamline visitor check-ins with powerful validation, duplicate prevention, and MongoDB/Mongoose support. Ideal for integration with **Meteor.js**, **Express**, or any **Node.js** backend.
 
